@@ -1,7 +1,7 @@
 console.log("index.js is connected");
-const foodURL = "https://www.themealdb.com/api/json/v1/1/search.php?s=a"
+const phoneURL = "https://openapi.programming-hero.com/api/phones?search=a"
 
-function fetchMeals(URL) {
+function fetchPhones(URL) {
 	const cardGrid = document.getElementById("card-grid");
 	const loadScreen = `
 	<div class="col">
@@ -23,36 +23,36 @@ function fetchMeals(URL) {
 	cardGrid.innerHTML = loadScreen;
 	fetch(URL)
 		.then(res => res.json())
-		.then(({meals}) => {
+		.then(data => {
 
 			const cardGrid = document.getElementById("card-grid");
-			displayDish(meals)
+			displayPhone(data)
 		});
 }
 
-fetchMeals(foodURL);
+fetchPhones(phoneURL);
 
-function searchMeals(URL, func) {
+function searchPhones(URL, func) {
 	fetch(URL)
 		.then(res => res.json())
-		.then(({meals}) => func(meals));
+		.then(data => func(data));
 }
 
-function displayDish(dataArr) {
+function displayPhone({data: dataArr}) {
+	console.log(dataArr);
 	const cardGrid = document.getElementById("card-grid");
 	cardGrid.innerHTML = "";
-	dataArr.forEach(dish => {
-		const {idMeal, strMealThumb, strMeal, strInstructions} = dish;
+	dataArr.forEach(phone => {
+		const {phone_name, slug} = phone;
 		const aDish = document.createElement("div");
 		aDish.classList.add("col");
 		cardInnerHtml = `
 	  <div class="card">
-	    <img src="${strMealThumb}" class="card-img-top" alt="Image of ${strMeal}">
+	    <img src="./images/test.jpg" class="card-img-top" alt="Image of ${phone_name}">
 	    <div class="card-body">
-	      <h5 class="card-title">${strMeal}</h5>
-	      <p class="card-text text-justify">${strInstructions.slice(0, 100)}</p>
+	      <h5 class="card-title">${phone_name}</h5>
 	      <!-- Button trigger modal -->
-<button onclick="popDetailModal('${idMeal}')" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button onclick="popDetailModal('${slug}')" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 Details
 </button>
 	    </div>
@@ -65,7 +65,7 @@ Details
 }
 
 //Triggers
-function popDetailModal(idMeal) {
+function popDetailModal(phoneId) {
 	const modalBody = document.getElementById("modal-body");
 	const modalTitle = document.getElementById("modalDishTitle");
 	const loadScreen = `
@@ -78,8 +78,8 @@ function popDetailModal(idMeal) {
 	modalBody.innerHTML = loadScreen;
 	modalTitle.textContent = "";
 
-	const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`;
-	searchMeals(URL, showModalDishDetails);
+	const URL = `https://openapi.programming-hero.com/api/phone/${phoneId}`;
+	searchPhones(URL, showModalDishDetails);
 }
 
 function showSearchResult() {
@@ -105,23 +105,23 @@ function showSearchResult() {
 	const query = document.getElementById("search-box").value;
 	console.log(query);
 
-	const URL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`;
-	searchMeals(URL, displayDish);
+	const URL = `https://openapi.programming-hero.com/api/phones?search=${query}`;
+	searchPhones(URL, displayPhone);
 
 }
 
 //Populator
-function showModalDishDetails(mealSingleArr) {
+function showModalDishDetails({data}) {
 	const modalBody = document.getElementById("modal-body");
 	const modalTitle = document.getElementById("modalDishTitle");
-	const {idMeal, strMealThumb, strMeal, strInstructions} = mealSingleArr[0];
-	modalTitle.textContent = strMeal;
+	const {name, image, mainFeatures} = data;
+	modalTitle.textContent = name;
 	cardInnerHtml = `
 	  <div class="card">
-	    <img src="${strMealThumb}" class="card-img-top" alt="...">
+	    <img src="${image}" class="card-img-top" alt="...">
 	    <div class="card-body">
-	      <h5 class="card-title">${strMeal}</h5>
-	      <p class="card-text text-justify">${strInstructions.slice(0, 100)}</p>
+	      <h5 class="card-title">${name}</h5>
+	      <p class="card-text text-justify">${JSON.stringify(mainFeatures)}</p>
 	    </div>
 	</div>
 	`;
