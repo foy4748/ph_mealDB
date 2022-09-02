@@ -1,9 +1,9 @@
 console.log("index.js is connected");
-const phoneURL = "https://openapi.programming-hero.com/api/phones?search=a"
+const phoneURL = "https://openapi.programming-hero.com/api/phones?search=a";
 
 function fetchPhones(URL) {
-	const cardGrid = document.getElementById("card-grid");
-	const loadScreen = `
+  const cardGrid = document.getElementById("card-grid");
+  const loadScreen = `
 	<div class="col">
 	    <div class="d-flex justify-content-center align-items-centery">
 		<div class="loader"></div>
@@ -20,33 +20,60 @@ function fetchPhones(URL) {
 	    </div>
 	</div>
 	`;
-	cardGrid.innerHTML = loadScreen;
-	fetch(URL)
-		.then(res => res.json())
-		.then(data => {
-
-			const cardGrid = document.getElementById("card-grid");
-			displayPhone(data)
-		});
+  cardGrid.innerHTML = loadScreen;
+  fetch(URL)
+    .then((res) => res.json())
+    .then((data) => {
+      const cardGrid = document.getElementById("card-grid");
+      displayPhone(data);
+    });
 }
 
 fetchPhones(phoneURL);
 
 function searchPhones(URL, func) {
-	fetch(URL)
-		.then(res => res.json())
-		.then(data => func(data));
+  fetch(URL)
+    .then((res) => res.json())
+    .then((data) => func(data));
 }
 
-function displayPhone({data: dataArr}) {
-	console.log(dataArr);
-	const cardGrid = document.getElementById("card-grid");
-	cardGrid.innerHTML = "";
-	dataArr.forEach(phone => {
-		const {phone_name, slug} = phone;
-		const aDish = document.createElement("div");
-		aDish.classList.add("col");
-		cardInnerHtml = `
+function displayPhone({ data: dataArr }) {
+  const cardGrid = document.getElementById("card-grid");
+  const showAllBtn = document.getElementById("show-all-btn");
+  const btn = showAllBtn.querySelector(".btn");
+  const noPhone = document.getElementById("no-phone-found");
+
+  showAllBtn.addEventListener("click", () => {
+    btn.setAttribute("disabled", true);
+    const query = document.getElementById("search-box").value;
+
+    const URL = `https://openapi.programming-hero.com/api/phones?search=${
+      query ? query : "a"
+    }`;
+    searchPhones(URL, displayPhone);
+  });
+
+  cardGrid.innerHTML = "";
+
+  if (dataArr.length < 1) {
+    console.log("Less than 1 triggered");
+    console.log(noPhone.classList);
+    noPhone.classList.toggle("d-none");
+    showAllBtn.classList.add("d-none");
+  }
+  console.log(btn.getAttribute("disabled"));
+
+  if (!btn.getAttribute("disabled") && dataArr.length > 10) {
+    console.log("Greater than 10 triggered");
+    dataArr = dataArr.slice(0, 10);
+    showAllBtn.classList.remove("d-none");
+  }
+
+  dataArr.forEach((phone) => {
+    const { phone_name, slug } = phone;
+    const aDish = document.createElement("div");
+    aDish.classList.add("col");
+    cardInnerHtml = `
 	  <div class="card">
 	    <img src="./images/test.jpg" class="card-img-top" alt="Image of ${phone_name}">
 	    <div class="card-body">
@@ -58,33 +85,38 @@ Details
 	    </div>
 	</div>
 	`;
-		aDish.innerHTML = cardInnerHtml;
-		const cardGrid = document.getElementById("card-grid");
-		cardGrid.appendChild(aDish);
-	});
+    aDish.innerHTML = cardInnerHtml;
+    const cardGrid = document.getElementById("card-grid");
+    cardGrid.appendChild(aDish);
+  });
 }
 
 //Triggers
 function popDetailModal(phoneId) {
-	const modalBody = document.getElementById("modal-body");
-	const modalTitle = document.getElementById("modalDishTitle");
-	const loadScreen = `
+  const modalBody = document.getElementById("modal-body");
+  const modalTitle = document.getElementById("modalDishTitle");
+  const loadScreen = `
 	<div class="col">
 	    <div class="d-flex justify-content-center align-items-centery">
 		<div class="loader"></div>
 	    </div>
 	</div>
 	`;
-	modalBody.innerHTML = loadScreen;
-	modalTitle.textContent = "";
+  modalBody.innerHTML = loadScreen;
+  modalTitle.textContent = "";
 
-	const URL = `https://openapi.programming-hero.com/api/phone/${phoneId}`;
-	searchPhones(URL, showModalDishDetails);
+  const URL = `https://openapi.programming-hero.com/api/phone/${phoneId}`;
+  searchPhones(URL, showModalDishDetails);
 }
 
 function showSearchResult() {
-	const cardGrid = document.getElementById("card-grid");
-	const loadScreen = `
+  const cardGrid = document.getElementById("card-grid");
+
+  const showAllBtn = document.getElementById("show-all-btn");
+  const btn = showAllBtn.querySelector(".btn");
+
+  btn.removeAttribute("disabled");
+  const loadScreen = `
 	<div class="col">
 	    <div class="d-flex justify-content-center align-items-centery">
 		<div class="loader"></div>
@@ -101,22 +133,21 @@ function showSearchResult() {
 	    </div>
 	</div>
 	`;
-	cardGrid.innerHTML = loadScreen;
-	const query = document.getElementById("search-box").value;
-	console.log(query);
+  cardGrid.innerHTML = loadScreen;
+  const query = document.getElementById("search-box").value;
+  console.log(query);
 
-	const URL = `https://openapi.programming-hero.com/api/phones?search=${query}`;
-	searchPhones(URL, displayPhone);
-
+  const URL = `https://openapi.programming-hero.com/api/phones?search=${query}`;
+  searchPhones(URL, displayPhone);
 }
 
 //Populator
-function showModalDishDetails({data}) {
-	const modalBody = document.getElementById("modal-body");
-	const modalTitle = document.getElementById("modalDishTitle");
-	const {name, image, mainFeatures} = data;
-	modalTitle.textContent = name;
-	cardInnerHtml = `
+function showModalDishDetails({ data }) {
+  const modalBody = document.getElementById("modal-body");
+  const modalTitle = document.getElementById("modalDishTitle");
+  const { name, image, mainFeatures } = data;
+  modalTitle.textContent = name;
+  cardInnerHtml = `
 	  <div class="card">
 	    <img src="${image}" class="card-img-top" alt="...">
 	    <div class="card-body">
@@ -125,7 +156,5 @@ function showModalDishDetails({data}) {
 	    </div>
 	</div>
 	`;
-	modalBody.innerHTML = cardInnerHtml;
-
+  modalBody.innerHTML = cardInnerHtml;
 }
-

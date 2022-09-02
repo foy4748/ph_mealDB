@@ -1,45 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Choose Meal</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" media="all" />
+    <link rel="stylesheet" href="style.css" media="all" />
+  </head>
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Choose Meal</title>
-	<link rel="stylesheet" href="css/bootstrap.min.css" media="all">
-	<link rel="stylesheet" href="style.css" media="all">
-</head>
-
-<body>
-	<section class="container header">
-		<header class="my-5 d-flex flex-column flex-md-row justify-content-between">
-			<h1>Choose Meal</h1>
-			<div class="d-flex align-items-center"><input id="search-box" type="text">
-				<button onclick="showSearchResult()" class="btn btn-primary">Search</button>
-			</div>
-			<!-- Modal -->
-			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="modalDishTitle" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="modalDishTitle">Modal title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body" id="modal-body">
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</header>
-	</section>
-	<section class="container card-grid">
-		<div id="card-grid" class="row row-cols-1 row-cols-md-3 g-4">
-		</div>
-	</section>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/index.js"></script>
-</body>
-
+  <body>
+    <section class="container header">
+      <header
+        class="my-5 d-flex flex-column flex-md-row justify-content-between"
+      >
+        <h1>Choose Meal</h1>
+        <div class="d-flex align-items-center">
+          <input id="search-box" type="text" />
+          <button onclick="showSearchResult()" class="btn btn-primary">
+            Search
+          </button>
+        </div>
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="exampleModal"
+          tabindex="-1"
+          aria-labelledby="modalDishTitle"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalDishTitle">Modal title</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body" id="modal-body"></div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </section>
+    <section class="container card-grid">
+      <div class="card-grid">
+        <div id="card-grid" class="row row-cols-1 row-cols-md-3 g-4">
+          <!-- Cards will be generated using API call -->
+        </div>
+        <p class="text-center color-danger d-none" id="no-phone-found">
+          No phone found
+        </p>
+        <div class="my-5 text-center d-none" id="show-all-btn">
+          <button class="btn btn-primary">Show All</button>
+        </div>
+      </div>
+    </section>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
+  </body>
 </html>
